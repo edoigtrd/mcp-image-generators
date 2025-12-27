@@ -1,0 +1,6 @@
+dataclasses
+requests
+pillow
+boto3
+python-dotenv
+fastmcp
