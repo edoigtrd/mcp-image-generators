@@ -1,3 +1,4 @@
+from __future__ import annotations
 from imagen.abstract import ImageGenerationResponse, ImageGenerator, ImageGenerationConfig, ImageGenerationOptions, ImageEditionOptions, ImageGenerationError
 import requests
 from typing import List, Literal
@@ -6,7 +7,6 @@ from utils.s3 import copy_url_to_s3
 import os
 from dataclasses import dataclass
 from registery import register_generator
-from __future__ import annotations
 
 
 @dataclass

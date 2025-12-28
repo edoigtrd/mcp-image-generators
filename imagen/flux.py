@@ -1,3 +1,4 @@
+from __future__ import annotations
 from imagen.abstract import ImageGenerationResponse, ImageGenerator, ImageGenerationConfig, ImageGenerationOptions, ImageEditionOptions, ImageGenerationError
 import requests
 from typing import Literal
@@ -8,7 +9,6 @@ import time
 from dataclasses import dataclass
 from registery import register_generator
 import os
-from __future__ import annotations
 
 
 @dataclass
