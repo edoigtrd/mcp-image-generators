@@ -58,7 +58,7 @@ class RunpodNanoBananaClient(ImageGenerator) :
     def edit_image(self, options: RunpodNanoBananaImageEditingOptions) -> ImageGenerationResponse:
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.config.api_key}"
+            "Authorization": f"Bearer {self.generator_config.api_key}"
         }
         
         if options.aspect_ratio is None:
@@ -81,7 +81,7 @@ class RunpodNanoBananaClient(ImageGenerator) :
         }
         response = requests.post('https://api.runpod.ai/v2/nano-banana-pro-edit/run', headers=headers, json=data)
         self.response = response.json()
-        return RunpodNanoBananaResponse(self.response, self.config)
+        return RunpodNanoBananaResponse(self.response, self.generator_config)
 
     @classmethod
     def readme(cls) -> str:
