@@ -192,10 +192,6 @@ python-json-logger==4.0.0
     # via pydocket
 python-multipart==0.0.21
     # via mcp
-pywin32==311
-    # via mcp
-pywin32-ctypes==0.2.3
-    # via keyring
 pyyaml==6.0.3
     # via jsonschema-path
 redis==7.1.0

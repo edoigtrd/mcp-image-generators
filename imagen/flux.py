@@ -8,7 +8,7 @@ import time
 from dataclasses import dataclass
 from registery import register_generator
 import os
-
+from __future__ import annotations
 
 
 @dataclass
@@ -16,7 +16,7 @@ class FluxImageGeneratorConfig(ImageGenerationConfig):
     api_key : str
 
     @classmethod
-    def from_config_dict(cls, data: dict | None) -> "ImageGenerationConfig":
+    def from_config_dict(cls, data: dict | None) -> FluxImageGeneratorConfig:
         return cls(
             api_key=os.getenv("BFL_API_KEY", "")
         )
@@ -98,9 +98,12 @@ class FluxResponse(ImageGenerationResponse):
         return s3_url
 
 @register_generator("flux")
-class FluxClient(ImageGenerator) :
+class FluxClient(ImageGenerator):
+    Config = FluxImageGeneratorConfig
+
     def __init__(self, generator_config: FluxImageGeneratorConfig) -> None:
         super().__init__(generator_config)
+
 
     def generate_image(self, options: FluxImageGeneratorOptions) -> str:
         request = requests.post(

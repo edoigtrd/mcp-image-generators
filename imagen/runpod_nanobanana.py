@@ -6,6 +6,7 @@ from utils.s3 import copy_url_to_s3
 import os
 from dataclasses import dataclass
 from registery import register_generator
+from __future__ import annotations
 
 
 @dataclass
@@ -13,8 +14,7 @@ class RunpodNanoBananaGeneratorConfig(ImageGenerationConfig):
     api_key : str
 
     @classmethod
-    def from_config_dict(cls, data: dict | None) -> "ImageGenerationConfig":
-        print(os.getenv("RUNPOD_API_KEY", ""), "instantiating RunpodNanoBananaGeneratorConfig")
+    def from_config_dict(cls, data: dict | None) -> RunpodNanoBananaGeneratorConfig:
         return cls(
             api_key=os.getenv("RUNPOD_API_KEY", "")
         )
@@ -50,8 +50,10 @@ class RunpodNanoBananaResponse(ImageGenerationResponse):
 
 @register_generator("nanobanana")
 class RunpodNanoBananaClient(ImageGenerator) :
-    def __init__(self, config: RunpodNanoBananaGeneratorConfig) -> None:
-        self.config = config
+    Config = RunpodNanoBananaGeneratorConfig
+
+    def __init__(self, generator_config: RunpodNanoBananaGeneratorConfig) -> None:
+        super().__init__(generator_config)
 
     def edit_image(self, options: RunpodNanoBananaImageEditingOptions) -> ImageGenerationResponse:
         headers = {
