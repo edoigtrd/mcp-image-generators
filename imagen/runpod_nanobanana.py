@@ -79,7 +79,7 @@ class RunpodNanoBananaClient(ImageGenerator) :
                 "enable_sync_mode": False
             }
         }
-        response = requests.post('https://api.runpod.ai/v2/nano-banana-pro-edit/run', headers=headers, json=data)
+        response = requests.post('https://api.runpod.ai/v2/nano-banana-pro-edit/runsync', headers=headers, json=data)        
         self.response = response.json()
         return RunpodNanoBananaResponse(self.response, self.generator_config)
 
