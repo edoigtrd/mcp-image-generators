@@ -1,24 +1,24 @@
 # MCP Image Generators
 
-Serveur [MCP](https://modelcontextprotocol.io/) exposant plusieurs générateurs d'images (Flux, RunPod Nano Banana Pro) sous forme d'outils, avec upload automatique des résultats vers un bucket S3-compatible.
+[MCP](https://modelcontextprotocol.io/) server exposing several image generators (Flux, RunPod Nano Banana Pro) as tools, with automatic upload of the results to an S3-compatible bucket.
 
-## Fonctionnement
+## How it works
 
-Le serveur découvre automatiquement les générateurs déclarés dans `imagen/` (via le décorateur `@register_generator`) et expose pour chacun un jeu d'outils MCP :
+The server auto-discovers the generators declared in `imagen/` (via the `@register_generator` decorator) and exposes a set of MCP tools for each one:
 
-- `image-{name}-generate` / `image-{name}-generate_schema` — si le générateur implémente `generate_image`
-- `image-{name}-edit` / `image-{name}-edit_schema` — si le générateur implémente `edit_image`
-- `image-{name}-readme` — guide de prompting spécifique au générateur
-- `image-list` — liste tous les générateurs disponibles et leurs capacités
+- `image-{name}-generate` / `image-{name}-generate_schema` — if the generator implements `generate_image`
+- `image-{name}-edit` / `image-{name}-edit_schema` — if the generator implements `edit_image`
+- `image-{name}-readme` — generator-specific prompting guide
+- `image-list` — lists all available generators and their capabilities
 
-Chaque image générée est téléchargée puis recopiée vers S3 ; l'outil renvoie l'URL publique finale.
+Every generated image is downloaded and copied to S3; the tool returns the final public URL.
 
-### Générateurs inclus
+### Included generators
 
-| Nom | Capacités | Variable d'API requise |
+| Name | Capabilities | Required API key |
 |---|---|---|
-| `flux` | génération | `BFL_API_KEY` |
-| `nanobanana` | édition | `RUNPOD_API_KEY` |
+| `flux` | generation | `BFL_API_KEY` |
+| `nanobanana` | editing | `RUNPOD_API_KEY` |
 
 ## Installation
 
@@ -26,18 +26,18 @@ Chaque image générée est téléchargée puis recopiée vers S3 ; l'outil renv
 pip install -r requirements.txt
 ```
 
-Python 3.11+ est requis (utilisation de `tomllib`).
+Python 3.11+ is required (uses `tomllib`).
 
 ## Configuration
 
-Toutes les clés d'API et paramètres S3 sont lus depuis les variables d'environnement (un fichier `.env` est chargé via `python-dotenv`).
+All API keys and S3 settings are read from environment variables (a `.env` file is loaded via `python-dotenv`).
 
 ```bash
-# Générateurs
+# Generators
 BFL_API_KEY=...
 RUNPOD_API_KEY=...
 
-# Stockage S3-compatible (upload des images générées)
+# S3-compatible storage (upload of generated images)
 S3_ENDPOINT_URL=...
 S3_ACCESS_KEY=...
 S3_SECRET_KEY=...
@@ -45,37 +45,37 @@ S3_REGION=...
 S3_CDN_URL=...
 S3_BUCKET=...
 
-# Serveur MCP (optionnel)
-MCP_TRANSPORT=http   # ou "stdio"
+# MCP server (optional)
+MCP_TRANSPORT=http   # or "stdio"
 MCP_HOST=0.0.0.0
 MCP_PORT=7001
 IMAGESMCP_CONFIG=config.toml
 ```
 
-Un fichier `config.toml` optionnel peut surcharger la config de chaque générateur, sous une section nommée d'après sa classe `Config` (ex. `[FluxImageGeneratorConfig]`).
+An optional `config.toml` file can override each generator's config, under a section named after its `Config` class (e.g. `[FluxImageGeneratorConfig]`).
 
-## Lancement
+## Running
 
 ```bash
 python main.py
 ```
 
-Le serveur démarre en HTTP sur le port 7001 par défaut. Pour du transport stdio (usage local avec un client MCP) :
+The server starts over HTTP on port 7001 by default. For stdio transport (local usage with an MCP client):
 
 ```bash
 MCP_TRANSPORT=stdio python main.py
 ```
 
-### Avec Docker
+### With Docker
 
 ```bash
 docker build -t mcp-image-generators .
 docker run --env-file .env -p 7001:7001 mcp-image-generators
 ```
 
-## Ajouter un générateur
+## Adding a generator
 
-Créer un fichier dans `imagen/`, définir une classe héritant de `ImageGenerator` (voir `imagen/abstract.py`), l'enregistrer avec `@register_generator("nom")`, et implémenter `generate_image` et/ou `edit_image`. Le module est importé automatiquement au démarrage et les outils MCP correspondants sont créés sans configuration supplémentaire.
+Create a file in `imagen/`, define a class inheriting from `ImageGenerator` (see `imagen/abstract.py`), register it with `@register_generator("name")`, and implement `generate_image` and/or `edit_image`. The module is imported automatically at startup and the matching MCP tools are created with no extra configuration.
 
 ```python
 @register_generator("mygen")
